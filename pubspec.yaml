@@ -1,6 +1,6 @@
 name: hadith_nawawi
 description: "Hadith Nawawi Package Hadith Nawawi Package is a Flutter package designed to provide access to the esteemed collection of Arba'in Al-Nawawi (الأربعين النووية), a compilation of forty hadiths by Imam Nawawi. This package allows for easy integration into your Flutter applications, offering a seamless way to access and display these foundational hadiths."
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/Kandil7/hadith_nawawi
 repository: https://github.com/Kandil7/hadith_nawawi.git
 issue_tracker: https://github.com/Kandil7/hadith_nawawi/issues
