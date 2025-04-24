@@ -267,4 +267,3 @@ class HadithListItem extends StatelessWidget {
     );
   }
 }
-}
