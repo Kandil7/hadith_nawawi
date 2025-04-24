@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hadith_nawawi/hadith_nawawi.dart';
-import 'hadith_detail_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,11 +33,18 @@ class _HadithHomePageState extends State<HadithHomePage> {
   String _errorMessage = '';
   List<Hadith> _hadiths = [];
   List<Hadith> _filteredHadiths = [];
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loadHadiths();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadHadiths() async {
@@ -47,9 +53,9 @@ class _HadithHomePageState extends State<HadithHomePage> {
         _isLoading = true;
         _errorMessage = '';
       });
-
+      
       await HadithNawawi.loadHadiths();
-
+      
       setState(() {
         _hadiths = HadithNawawi.getHadiths();
         _filteredHadiths = _hadiths;
@@ -73,6 +79,14 @@ class _HadithHomePageState extends State<HadithHomePage> {
     });
   }
 
+  void _clearSearch() {
+    setState(() {
+      _searchController.clear();
+      _filteredHadiths = _hadiths;
+    });
+    FocusScope.of(context).unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,19 +105,14 @@ class _HadithHomePageState extends State<HadithHomePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 labelText: 'Search Hadiths',
                 prefixIcon: const Icon(Icons.search),
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    setState(() {
-                      _filteredHadiths = _hadiths;
-                    });
-                    // Clear the text field
-                    FocusScope.of(context).unfocus();
-                  },
+                  onPressed: _clearSearch,
                 ),
               ),
               onChanged: _filterHadiths,
@@ -267,4 +276,71 @@ class HadithListItem extends StatelessWidget {
     );
   }
 }
+
+class HadithDetailPage extends StatelessWidget {
+  final Hadith hadith;
+
+  const HadithDetailPage({super.key, required this.hadith});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Hadith ${hadith.idInBook}'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Narrator
+            Text(
+              hadith.english.narrator,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // English text
+            Text(
+              hadith.english.text,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 24),
+            
+            // Arabic text
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: Text(
+                hadith.arabic,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Amiri',
+                  height: 1.5,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Metadata
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Hadith ID: ${hadith.id}'),
+                    Text('Book ID: ${hadith.bookId}'),
+                    Text('Chapter ID: ${hadith.chapterId}'),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

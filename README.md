@@ -1,7 +1,3 @@
-Here’s the updated `README.md` file with the LinkedIn profile added to the **Contact** section:
-
----
-
 # Hadith Nawawi Package
 
 ## Overview
@@ -35,7 +31,7 @@ To use the **Hadith Nawawi** package in your Flutter application, follow these s
    dependencies:
      flutter:
        sdk: flutter
-     hadith_nawawi: ^0.0.1 # Replace with the latest version
+     hadith_nawawi: ^0.0.2 # Replace with the latest version
    ```
 
 2. **Install the Package**
@@ -79,9 +75,67 @@ List<Hadith> hadiths = HadithNawawi.getHadiths();
 Hadith? specificHadith = HadithNawawi.getHadithByNumber(1);
 ```
 
-### 4. Display Hadiths
+### 4. Search Hadiths
 
-Display the hadiths in a `ListView` widget:
+Search for hadiths containing specific text in Arabic or English:
+
+```dart
+List<Hadith> searchResults = HadithNawawi.searchHadiths("actions");
+```
+
+### 5. Display Hadiths
+
+#### Using Built-in Widgets
+
+The package provides several ready-to-use widgets for displaying hadiths:
+
+```dart
+// Display a list of hadiths
+HadithListView(
+  hadiths: HadithNawawi.getHadiths(),
+  onHadithTap: (hadith) {
+    // Handle tap on a hadith
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HadithDetailScreen(hadith: hadith),
+      ),
+    );
+  },
+)
+
+// Display a single hadith card
+HadithCard(
+  hadith: hadith,
+  onTap: () {
+    // Handle tap on the card
+  },
+)
+
+// Display detailed hadith information
+HadithDetailView(
+  hadith: hadith,
+  showMetadata: true,
+)
+
+// Search bar for hadiths
+HadithSearchBar(
+  onQueryChanged: (query) {
+    setState(() {
+      _filteredHadiths = HadithNawawi.searchHadiths(query);
+    });
+  },
+  onClear: () {
+    setState(() {
+      _filteredHadiths = HadithNawawi.getHadiths();
+    });
+  },
+)
+```
+
+#### Custom Implementation
+
+You can also create your own custom UI:
 
 ```dart
 class HadithList extends StatelessWidget {
@@ -116,30 +170,55 @@ class HadithList extends StatelessWidget {
 Ensure your JSON file (`assets/hadiths.json`) follows this structure:
 
 ```json
-[
-  {
-    "id": 40944,
-    "idInBook": 1,
-    "chapterId": 0,
-    "bookId": 10,
-    "arabic": "عَنْ أَمِيرِ الْمُؤْمِنِينَ أَبِي حَفْصٍ عُمَرَ بْنِ الْخَطَّابِ رَضِيَ اللهُ عَنْهُ قَالَ...",
+{
+  "id": 10,
+  "metadata": {
+    "id": 10,
+    "length": 42,
+    "arabic": {
+      "title": "الأربعون النووية",
+      "author": "الإمام يحيى بن شرف النووي",
+      "introduction": ""
+    },
     "english": {
-      "narrator": "It is narrated on the authority of Amirul Mu'minin, Abu Hafs 'Umar bin al-Khattab (ra) who said:",
-      "text": "I heard the Messenger of Allah (ﷺ) say..."
+      "title": "The Forty Hadith of Imam Nawawi",
+      "author": "Imam Yahya ibn Sharaf al-Nawawi",
+      "introduction": ""
     }
   },
-  {
-    "id": 40945,
-    "idInBook": 2,
-    "chapterId": 0,
-    "bookId": 10,
-    "arabic": "عَنْ عُمَرَ رَضِيَ اللهُ عَنْهُ أَيْضًا قَالَ...",
-    "english": {
-      "narrator": "Also on the authority of `Umar (ra) who said:",
-      "text": "While we were one day sitting with the Messenger of Allah (ﷺ)..."
+  "chapters": [
+    {
+      "id": 0,
+      "bookId": 10,
+      "arabic": "الأربعون النووية",
+      "english": "Forty Hadith of an-Nawawi"
     }
-  }
-]
+  ],
+  "hadiths": [
+    {
+      "id": 40944,
+      "idInBook": 1,
+      "chapterId": 0,
+      "bookId": 10,
+      "arabic": "عَنْ أَمِيرِ الْمُؤْمِنِينَ أَبِي حَفْصٍ عُمَرَ بْنِ الْخَطَّابِ رَضِيَ اللهُ عَنْهُ قَالَ...",
+      "english": {
+        "narrator": "It is narrated on the authority of Amirul Mu'minin, Abu Hafs 'Umar bin al-Khattab (ra) who said:",
+        "text": "I heard the Messenger of Allah (ﷺ) say..."
+      }
+    },
+    {
+      "id": 40945,
+      "idInBook": 2,
+      "chapterId": 0,
+      "bookId": 10,
+      "arabic": "عَنْ عُمَرَ رَضِيَ اللهُ عَنْهُ أَيْضًا قَالَ...",
+      "english": {
+        "narrator": "Also on the authority of `Umar (ra) who said:",
+        "text": "While we were one day sitting with the Messenger of Allah (ﷺ)..."
+      }
+    }
+  ]
+}
 ```
 
 ---
@@ -189,4 +268,3 @@ For questions, feedback, or support, feel free to reach out to:
 ### Why Choose Hadith Nawawi?
 
 This package is designed to simplify the process of integrating Islamic teachings into your Flutter applications. Whether you're building an educational app, a religious companion, or a personal learning tool, **Hadith Nawawi** provides everything you need to work with the forty hadiths of Imam Nawawi efficiently.
-

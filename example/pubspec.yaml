@@ -1,0 +1,21 @@
+name: hadith_nawawi_example
+description: Example app for the Hadith Nawawi package
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  hadith_nawawi:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
